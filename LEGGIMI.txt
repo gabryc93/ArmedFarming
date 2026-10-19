@@ -1,0 +1,103 @@
+TRATTORE ARMATO
+===============
+
+COME AVVIARLO
+Online: apri la pagina del gioco nel browser (Chrome, Edge, Firefox o Safari
+aggiornati). In locale: apri "index.html" con doppio clic; non serve installare
+nulla e funziona anche senza internet.
+
+REQUISITI
+- Computer con tastiera e mouse (su telefono e tablet non e' giocabile).
+- Browser con WebGL attivo. Su PC vecchi o senza scheda grafica puo' andare
+  a scatti, soprattutto durante incendi grandi e con pioggia o neve.
+
+IMPOSTAZIONI (nel garage, prima di partire; vengono ricordate)
+- Grafica: Alta / Bassa. Se il gioco scatta scegli Bassa (anche dalla pausa).
+- Difficolta': Facile / Normale / Difficile (volatili, polizia, incendi, soldi).
+- Durata partita: 1, 2 o 3 campi da trebbiare. Per una prima prova: 1 campo.
+
+L'ANNO
+La partita dura un anno: primavera, estate, autunno e inverno, ognuna di
+4-5 minuti. Vinci se trebbi i campi richiesti prima della fine dell'inverno.
+- Primavera: crescita normale, piogge che annaffiano da sole.
+- Estate: crescita piu' rapida, ma i campi si seccano e possono prendere fuoco.
+- Autunno: crescita piu' lenta, piogge e vento, arrivano le oche selvatiche.
+- Inverno: neve, crescita molto lenta, i mezzi slittano.
+Una giornata dura circa 2 minuti e mezzo. Di notte accendi le luci con L:
+fari anteriori e luci di lavoro sul tetto (davanti e dietro, sull'attrezzo).
+Anche mietitrebbia e Canadair hanno le loro luci.
+
+IL CICLO DI UN CAMPO
+1. Trattore + aratro (1): abbassa con R e ara.
+2. Seminatrice (2): ripassa sul terreno arato (1 euro a casella).
+3. Botte d'acqua (3): annaffia. Si riempie alla torre dell'acqua in fattoria.
+4. Il grano cresce e diventa dorato.
+5. Mietitrebbia (E vicino al mezzo) con testata abbassata (R): trebbia.
+COME LEGGERE LO SCHERMO
+- In alto a sinistra: cosa fare adesso, con i tasti da premere e una
+  freccia che indica dove andare. Diventa rossa in caso di incendio.
+  Sotto ci sono i campi (Tab per i dettagli) e i messaggi recenti.
+- In alto a destra: stagione, ora, meteo, vento, mappa, soldi e stelle.
+- In basso a sinistra: il cruscotto del mezzo (velocita', attrezzo, luci,
+  crociera, stato del telaio, acqua).
+- In basso a destra: l'arma e le munizioni.
+- In basso al centro: il tasto utile quando sei vicino a qualcosa.
+- Il bordo dello schermo diventa rosso quando il fuoco e' vicino.
+- H apre la scheda dei comandi. Il gioco va in pausa se cambi finestra.
+
+VOLATILI
+- Piccioni: lenti, facili. Corvi: diffidenti, scappano da lontano.
+- Storni: arrivano in stormi all'alba e al tramonto, fragili.
+- Oche selvatiche: grosse, servono 2 colpi, mangiano 4 caselle alla volta.
+Di notte ne arrivano pochi. Mangiano semi e germogli appena nati.
+
+INCENDI
+- In estate un campo secco puo' prendere fuoco: tienilo bagnato passando
+  con la botte (3, abbassata) anche dove e' gia' seminato o maturo.
+- Il fuoco si allarga su campi, erba e alberi, piu' veloce sottovento.
+  Le strade lo fermano, ma col vento forte le braci le possono saltare.
+- Anche i razzi possono appiccare il fuoco quando l'erba e' secca.
+- Se il fuoco raggiunge la fattoria hai perso.
+- Per spegnere: botte del trattore abbassata vicino alle fiamme, oppure il
+  Canadair.
+
+CANADAIR
+- E' sulla pista accanto alla fattoria (aereo giallo sulla minimappa).
+  Avvicinati con un mezzo e premi E.
+- W/S motore, A/D vira, frecce su/giu' quota (serve velocita' per decollare).
+- Parte con il serbatoio pieno.
+- Spazio sgancia l'acqua: l'acqua cade un po' in avanti.
+- Dopo lo sgancio il serbatoio si ricarica da solo in volo in 10 secondi
+  (da vuoto a pieno). Volando basso e veloce sul lago si ricarica in ~3 s.
+- Per scendere: atterra, fermati vicino a un mezzo e premi E.
+
+ARMI, MUNIZIONI, TRAFFICO E POLIZIA
+- Q cambia arma (4 secondi di montaggio). Munizioni da casse colorate,
+  veicoli distrutti e rifornimento in fattoria.
+- Distruggere veicoli costa multe e stelle di ricercato; la polizia
+  ti arresta se ti ferma.
+
+COMANDI
+  W A S D / frecce   guida            Spazio   freno
+  Mouse              mira             Sinistro spara
+  Tasto destro       tienilo per girare la visuale e mirare al centro
+  R                  abbassa / alza attrezzo o testata
+  1 / 2 / 3          aratro / seminatrice / botte d'acqua
+  Q                  cambia arma
+  E                  cambia mezzo (trattore, mietitrebbia, Canadair)
+  C                  visuale esterna / cabina
+  L                  accendi / spegni le luci
+  T                  crociera: mantiene la velocita' (W/S la regolano,
+                     Spazio la annulla). Utile per arare e sparare insieme.
+  M                  ingrandisci / riduci la mappa
+  Tab                dettagli dei campi
+  G                  garage (solo in fattoria, col trattore)
+  P / N / H          pausa / audio / scheda dei comandi
+
+IL TUO PARERE
+Premi P (pausa) o arriva a fine partita: c'e' un riepilogo. Premi
+"Copia risultati" e incollalo in un messaggio con cosa ti e' piaciuto
+e cosa ti ha annoiato.
+
+LICENZE
+Usa three.js (licenza MIT), vedi la cartella "licenze".
