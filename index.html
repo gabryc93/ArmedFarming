@@ -451,8 +451,10 @@ let groundMat = null;
   groundMat = pmat(0xffffff, { map: t }); const m = new THREE.Mesh(new THREE.PlaneGeometry(1400, 1100), groundMat);
   m.rotation.x = -PI / 2; m.receiveShadow = true; scene.add(m);
 })();
+// anti z-fighting: i piani sovrapposti hanno uno scarto di profondita' proporzionale alla quota
+const lift = (m, y) => { m.polygonOffset = true; m.polygonOffsetFactor = m.polygonOffsetUnits = -y * 1000; return m; };
 function flat(w, l, x, z, y, color) {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, l), pmat(color));
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, l), lift(pmat(color), y));
   m.rotation.x = -PI / 2; m.position.set(x, y, z); m.receiveShadow = true; scene.add(m); return m;
 }
 flat(2 * WX + 60, ROAD_W, 0, 0, 0.03, 0x3e4044);
@@ -504,7 +506,7 @@ function addSign(x, z, t1, t2, col, rotY) {
   [[-1.8, -1.8], [1.8, -1.8], [-1.8, 1.8], [1.8, 1.8]].forEach(([dx, dz]) => { const l = new THREE.Mesh(new THREE.BoxGeometry(0.3, 10, 0.3), legM); l.position.set(TOWER.x + dx, 5, TOWER.z + dz); l.castShadow = true; scene.add(l); });
   const tank = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 4, 20), mat(0x8fb7c9)); tank.position.set(TOWER.x, 12, TOWER.z); tank.castShadow = true; scene.add(tank);
   const cap = new THREE.Mesh(new THREE.ConeGeometry(3.3, 1.6, 20), mat(0x5f6a72)); cap.position.set(TOWER.x, 14.8, TOWER.z); scene.add(cap);
-  const ring = new THREE.Mesh(new THREE.RingGeometry(8, 9, 40), new THREE.MeshBasicMaterial({ color: 0x6fa8d6, transparent: true, opacity: 0.7 }));
+  const ring = new THREE.Mesh(new THREE.RingGeometry(8, 9, 40), lift(new THREE.MeshBasicMaterial({ color: 0x6fa8d6, transparent: true, opacity: 0.7 }), 0.06));
   ring.rotation.x = -PI / 2; ring.position.set(TOWER.x, 0.06, TOWER.z); scene.add(ring);
   addSign(TOWER.x + 7, TOWER.z - 9, 'ACQUA', 'sosta qui', '#6fa8d6');
 })();
@@ -512,9 +514,9 @@ function addSign(x, z, t1, t2, col, rotY) {
 
 /* ---------- Lago e pista del Canadair ---------- */
 (function lakeAndRunway() {
-  const shore = new THREE.Mesh(new THREE.CircleGeometry(LAKE.r + 4, 48), mat(0xcbbf8e));
+  const shore = new THREE.Mesh(new THREE.CircleGeometry(LAKE.r + 4, 48), lift(mat(0xcbbf8e), 0.036));
   shore.rotation.x = -PI / 2; shore.position.set(LAKE.x, 0.036, LAKE.z); shore.receiveShadow = true; scene.add(shore);
-  const water = new THREE.Mesh(new THREE.CircleGeometry(LAKE.r, 48), pmat(0x3f7fae, { specular: 0x334455, shininess: 40 }));
+  const water = new THREE.Mesh(new THREE.CircleGeometry(LAKE.r, 48), lift(pmat(0x3f7fae, { specular: 0x334455, shininess: 40 }), 0.05));
   water.rotation.x = -PI / 2; water.position.set(LAKE.x, 0.05, LAKE.z); scene.add(water);
   flat(RUNWAY.len, RUNWAY.w, RUNWAY.x, RUNWAY.z, 0.033, 0x4a4c50);
   for (let x = RUNWAY.x - RUNWAY.len / 2 + 8; x < RUNWAY.x + RUNWAY.len / 2 - 6; x += 12) flat(6, 0.5, x, RUNWAY.z, 0.045, 0xe9e4d4);
@@ -579,7 +581,7 @@ const fields = fieldDefs.map((d, idx) => {
   const tex = new THREE.CanvasTexture(cv);
   tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
   flat(FS + 3, FS + 3, d.cx, d.cz, 0.034, 0x6b5a34);
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(FS, FS), pmat(0xffffff, { map: tex }));
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(FS, FS), lift(pmat(0xffffff, { map: tex }), 0.04));
   mesh.rotation.x = -PI / 2; mesh.position.set(d.cx, 0.04, d.cz); mesh.receiveShadow = true; scene.add(mesh);
   const crops = new THREE.InstancedMesh(cropGeo, mat(0xffffff), TOT);
   crops.frustumCulled = false; crops.receiveShadow = true; scene.add(crops);
@@ -702,7 +704,7 @@ initFuel();
 const scorchCv = document.createElement('canvas'); scorchCv.width = GX; scorchCv.height = GZ;
 const scorchCtx = scorchCv.getContext('2d');
 const scorchTex = new THREE.CanvasTexture(scorchCv); scorchTex.minFilter = THREE.LinearFilter; scorchTex.generateMipmaps = false;
-const scorchMesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * WX, 2 * WZ), new THREE.MeshBasicMaterial({ map: scorchTex, transparent: true, depthWrite: false }));
+const scorchMesh = new THREE.Mesh(new THREE.PlaneGeometry(2 * WX, 2 * WZ), lift(new THREE.MeshBasicMaterial({ map: scorchTex, transparent: true, depthWrite: false }), 0.065));
 scorchMesh.rotation.x = -PI / 2; scorchMesh.position.y = 0.065; scene.add(scorchMesh);
 let scorchDirty = false;
 function paintCell(k, color) {
@@ -2006,7 +2008,7 @@ const snowMesh = new THREE.Points(snowGeo, new THREE.PointsMaterial({ color: 0xf
 rainMesh.frustumCulled = snowMesh.frustumCulled = false; rainMesh.visible = snowMesh.visible = false;
 scene.add(rainMesh); scene.add(snowMesh);
 const drops = []; for (let n = 0; n < PREC_N; n++) drops.push({ x: rand(-45, 45), y: rand(0, 40), z: rand(-45, 45), s: rand(0.8, 1.2) });
-const snowCover = new THREE.Mesh(new THREE.PlaneGeometry(1400, 1100), pmat(0xf4f6f8, { transparent: true, opacity: 0, depthWrite: false }));
+const snowCover = new THREE.Mesh(new THREE.PlaneGeometry(1400, 1100), lift(pmat(0xf4f6f8, { transparent: true, opacity: 0, depthWrite: false }), 0.07));
 snowCover.rotation.x = -PI / 2; snowCover.position.y = 0.07; scene.add(snowCover);
 const skyCol = new THREE.Color(), tmpCol = new THREE.Color(), NIGHT = new THREE.Color(0x0b1226), DUSK = new THREE.Color(0xe29a6a), GREY = new THREE.Color(0x8d969e);
 const grassTarget = new THREE.Color(), leafTarget = new THREE.Color();
@@ -2036,9 +2038,15 @@ function updateEnv(dt) {
     if (f.done) continue;
     const decay = curSeason === 1 ? 1 / 80 : curSeason === 3 ? 0 : 1 / 220;
     f.moist = clamp(f.moist - decay * dt * (1 - rainAmt) + rainAmt * 0.04 * dt + snowFall * 0.01 * dt, 0, 1);
-    if (rainAmt > 0.4 && f.counts[ST.SEED] > 0) {
-      f.rainAcc += rainAmt * 10 * dt;
-      while (f.rainAcc >= 1) { f.rainAcc--; const i = (Math.random() * TILES) | 0, j = (Math.random() * TILES) | 0; if (f.tiles[j * TILES + i] === ST.SEED) setTile(f, i, j, ST.WET); }
+    if (rainAmt > 0.25 && f.counts[ST.SEED] > 0) {
+      // la pioggia annaffia come la botte: bagna a caso le caselle seminate (circa 1 campo intero in 40 s di pioggia piena)
+      f.rainAcc += rainAmt * 40 * dt;
+      while (f.rainAcc >= 1 && f.counts[ST.SEED] > 0) {
+        f.rainAcc--;
+        let k = (Math.random() * TOT) | 0;
+        for (let n = 0; n < TOT && f.tiles[k] !== ST.SEED; n++) k = (k + 1) % TOT;
+        setTile(f, k % TILES, (k / TILES) | 0, ST.WET);
+      }
     }
   }
   const dT = dayPhase();
