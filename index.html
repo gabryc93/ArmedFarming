@@ -393,7 +393,7 @@ const scene = new THREE.Scene();
 const SKY = 0xa9cde6;
 scene.background = new THREE.Color(SKY);
 scene.fog = new THREE.Fog(SKY, 160, 560);
-const camera = new THREE.PerspectiveCamera(65, 1, 0.1, 1600);
+const camera = new THREE.PerspectiveCamera(65, 1, 0.4, 1600);
 let VW = 1, VH = 1;
 function resize() {
   VW = window.innerWidth; VH = window.innerHeight;
@@ -452,7 +452,7 @@ let groundMat = null;
   m.rotation.x = -PI / 2; m.receiveShadow = true; scene.add(m);
 })();
 // anti z-fighting: i piani sovrapposti hanno uno scarto di profondita' proporzionale alla quota
-const lift = (m, y) => { m.polygonOffset = true; m.polygonOffsetFactor = m.polygonOffsetUnits = -y * 1000; return m; };
+const lift = (m, y) => { m.polygonOffset = true; m.polygonOffsetFactor = m.polygonOffsetUnits = -y * 150; return m; };
 function flat(w, l, x, z, y, color) {
   const m = new THREE.Mesh(new THREE.PlaneGeometry(w, l), lift(pmat(color), y));
   m.rotation.x = -PI / 2; m.position.set(x, y, z); m.receiveShadow = true; scene.add(m); return m;
@@ -2119,7 +2119,7 @@ function updateCamera(dt) {
   lookYaw = wrapAng(lookYaw);
   if (!dragging) { const k = Math.exp(-dt * 2.2); lookYaw *= k; lookPitch *= k; }
   if (camMode === 'cab') {
-    if (camera.fov !== 75) { camera.fov = 75; camera.updateProjectionMatrix(); }
+    if (camera.fov !== 75) { camera.fov = 75; camera.near = 0.1; camera.updateProjectionMatrix(); }
     lookYaw = clamp(lookYaw, -2.7, 2.7);
     const lp = clamp(-0.05 - lookPitch, -0.5, 0.9);
     const ey = isP ? 2.9 : isC ? 5.0 : 2.6, ez = isP ? 8.2 : isC ? 1.5 : -0.95;
@@ -2128,7 +2128,7 @@ function updateCamera(dt) {
     camera.lookAt(tmpV);
     camPos.copy(camera.position);
   } else {
-    if (camera.fov !== 65) { camera.fov = 65; camera.updateProjectionMatrix(); }
+    if (camera.fov !== 65) { camera.fov = 65; camera.near = 0.4; camera.updateProjectionMatrix(); }
     const a = V.h + lookYaw, fx = Math.sin(a), fz = Math.cos(a);
     const elev = clamp((isP ? 0.3 : isC ? 0.42 : 0.46) + lookPitch, 0.08, 1.16), D = isP ? 34 : isC ? 19 : 13.4;
     tmpV.set(V.pos.x - fx * D * Math.cos(elev), V.pos.y + D * Math.sin(elev), V.pos.z - fz * D * Math.cos(elev));
