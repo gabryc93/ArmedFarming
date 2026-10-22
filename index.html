@@ -198,13 +198,40 @@ kbd{display:inline-block;min-width:22px;padding:0 6px;border-radius:5px;backgrou
 .opt{font-family:var(--cond);font-weight:600;font-size:15px;padding:6px 12px;border:1px solid var(--edge-strong);border-radius:6px;background:var(--btn);color:var(--ink);cursor:pointer}
 .opt.on{background:var(--btn-on);color:var(--btn-on-ink);border-color:var(--btn-on)}
 .sw{width:36px;height:30px;padding:0}
-#touchNote{display:none;font-size:13px;color:var(--alarm);margin:0 0 12px}
+#touchNote{display:none;font-size:13px;color:var(--signal);margin:0 0 12px}
 @media (max-width:900px){
   #leftCol{width:min(290px,46vw)} #mAction{font-size:19px}
   #world{width:190px} #minimap{width:172px;height:115px} .w-keys{display:none}
   #cluster{transform:scale(.85);transform-origin:left bottom} #weapon{transform:scale(.85);transform-origin:right bottom}
   .hgrid{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ---- comandi touch ---- */
+#c{touch-action:none}
+#tc,#rot{display:none}
+body.touch #tc{display:block}
+#tc{position:fixed;inset:0;pointer-events:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;--tb:clamp(46px,11vh,62px)}
+#tc *{touch-action:none;-webkit-tap-highlight-color:transparent}
+#joy{position:fixed;left:calc(16px + env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:clamp(110px,30vh,150px);height:clamp(110px,30vh,150px);border-radius:50%;background:rgba(24,32,22,.45);border:2px solid rgba(242,235,211,.3);pointer-events:auto}
+#joyKnob{position:absolute;left:50%;top:50%;width:44%;height:44%;margin:-22% 0 0 -22%;border-radius:50%;background:rgba(242,182,50,.7);border:2px solid rgba(255,255,255,.5)}
+#tcBtns{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:calc(var(--tb)*4 + 24px);display:flex;flex-direction:row-reverse;flex-wrap:wrap-reverse;gap:8px;justify-content:flex-start;align-content:flex-start}
+#tcBtns.hasfire{right:calc(28px + var(--tb)*1.5 + env(safe-area-inset-right,0px));width:calc(var(--tb)*3 + 16px)}
+.tb{pointer-events:auto;width:var(--tb);height:var(--tb);border-radius:50%;border:2px solid rgba(242,235,211,.35);background:rgba(24,32,22,.55);color:#f2ebd3;font-family:var(--cond);font-weight:600;font-size:12px;line-height:1.05;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;cursor:pointer}
+.tb b{font-size:19px;font-weight:800;color:var(--signal)}
+.tb.down{background:rgba(242,182,50,.55);transform:scale(.94)}
+.tb.hid,.tb[hidden]{display:none}
+#tcFire{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:calc(var(--tb)*1.5);height:calc(var(--tb)*1.5);border-color:rgba(255,120,90,.7);background:rgba(120,30,20,.6);font-size:14px}
+#tcFire b{color:#ffd2c8}
+#tcTop{position:fixed;left:50%;top:calc(8px + env(safe-area-inset-top,0px));transform:translateX(-50%);display:flex;gap:8px;pointer-events:none}
+#tcTop .tb{width:38px;height:38px;border-radius:12px;font-size:15px}
+body.touch #leftCol{transform:scale(.72);transform-origin:top left}
+body.touch #world{width:230px;transform:scale(.66);transform-origin:top right}
+body.touch #minimap{width:210px;height:140px}
+body.touch #cluster{left:50%;transform:translateX(-50%) scale(.58);transform-origin:bottom center}
+body.touch #weapon{right:auto;left:50%;transform:translateX(-50%) scale(.6);transform-origin:bottom center;bottom:calc(var(--sb) + 70px)}
+body.touch #prompt{bottom:auto;top:calc(54px + env(safe-area-inset-top,0px));font-size:16px}
+body.touch #help,body.touch .w-keys{display:none !important}
+@media (orientation:portrait){ body.touch #rot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;background:rgba(14,20,13,.96);color:#f2ebd3;font-family:var(--cond);font-size:24px;font-weight:600;z-index:99} }
 @media (prefers-reduced-motion: reduce){ .note{animation:none} #banner,#vignette,.note{transition:none} }
 </style>
 </head>
@@ -295,6 +322,32 @@ kbd{display:inline-block;min-width:22px;padding:0 6px;border-radius:5px;backgrou
 
 <div id="prompt" class="plate"></div>
 <div id="reticle"></div>
+<div id="tc" data-veh="tractor">
+  <div id="joy"><i id="joyKnob"></i></div>
+  <div id="tcTop">
+    <button class="tb" data-k="KeyP" aria-label="Pausa">II</button>
+    <button class="tb" id="tcFs" aria-label="Schermo intero">[ ]</button>
+  </div>
+  <button id="tcFire" class="tb" data-v="tractor"><b>Fuoco</b></button>
+  <div id="tcBtns" class="hasfire">
+    <button class="tb" data-k="KeyE" data-v="tractor combine plane farmer"><b>E</b>Sali</button>
+    <button class="tb" data-k="KeyF" data-v="tractor combine plane"><b>F</b>Scendi</button>
+    <button class="tb" data-k="KeyR" data-v="tractor combine"><b>R</b>Attrezzo</button>
+    <button class="tb" data-k="Space" data-v="tractor combine"><b>_</b>Freno</button>
+    <button class="tb" data-k="Space" data-v="plane"><b>_</b>Sgancia</button>
+    <button class="tb" data-k="ArrowUp" data-v="plane"><b>&#9650;</b>Quota</button>
+    <button class="tb" data-k="ArrowDown" data-v="plane"><b>&#9660;</b>Quota</button>
+    <button class="tb" data-k="KeyQ" data-v="tractor"><b>Q</b>Arma</button>
+    <button class="tb" data-k="Digit3" data-v="tractor"><b>3</b>Botte</button>
+    <button class="tb" data-k="Digit2" data-v="tractor"><b>2</b>Semi</button>
+    <button class="tb" data-k="Digit1" data-v="tractor"><b>1</b>Aratro</button>
+    <button class="tb" data-k="KeyL" data-v="tractor combine plane"><b>L</b>Luci</button>
+    <button class="tb" data-k="KeyT" data-v="tractor combine"><b>T</b>Crociera</button>
+    <button class="tb" data-k="KeyC" data-v="tractor combine"><b>C</b>Vista</button>
+    <button class="tb" data-k="KeyG" data-v="tractor"><b>G</b>Garage</button>
+  </div>
+</div>
+<div id="rot">Ruota il telefono in orizzontale per giocare</div>
 
 <section id="help" class="plate" aria-label="Comandi">
   <h2>Comandi</h2>
@@ -305,7 +358,8 @@ kbd{display:inline-block;min-width:22px;padding:0 6px;border-radius:5px;backgrou
       <div class="hrow"><kbd>T</kbd>crociera; W e S la regolano</div>
       <div class="hrow"><kbd>C</kbd>visuale esterna o cabina</div>
       <div class="hrow"><kbd>L</kbd>luci</div>
-      <div class="hrow"><kbd>E</kbd>cambia mezzo quando sei vicino</div></div>
+      <div class="hrow"><kbd>E</kbd>cambia mezzo quando sei vicino</div>
+      <div class="hrow"><kbd>F</kbd>scendi a piedi (Maiusc corre); E per risalire</div></div>
     <div><h3>Lavoro nei campi</h3>
       <div class="hrow"><kbd>1</kbd>aratro</div>
       <div class="hrow"><kbd>2</kbd>seminatrice</div>
@@ -321,7 +375,7 @@ kbd{display:inline-block;min-width:22px;padding:0 6px;border-radius:5px;backgrou
       <div class="hrow"><kbd>W S</kbd>motore</div>
       <div class="hrow"><kbd>A D</kbd>virata</div>
       <div class="hrow"><kbd>↑ ↓</kbd>quota</div>
-      <div class="hrow"><kbd>Spazio</kbd>sgancia l'acqua; si ricarica in 10 s</div></div>
+      <div class="hrow"><kbd>Spazio</kbd>sgancia l'acqua; si ricarica in 20 s</div></div>
     <div><h3>Interfaccia</h3>
       <div class="hrow"><kbd>Tab</kbd>dettagli dei campi</div>
       <div class="hrow"><kbd>M</kbd>mappa grande</div>
@@ -334,7 +388,7 @@ kbd{display:inline-block;min-width:22px;padding:0 6px;border-radius:5px;backgrou
 <aside id="garage" class="on" aria-label="Garage">
   <h1>Trattore<br>Armato</h1>
   <p class="sub">Un anno per far crescere il raccolto. Ara, semina, annaffia e trebbia i campi prima che finisca l'inverno, difendendoli da volatili, incendi d'estate e dalla polizia, se esageri. Se il fuoco raggiunge la fattoria la partita finisce.</p>
-  <p id="touchNote">Questo prototipo richiede tastiera e mouse.</p>
+  <p id="touchNote">Su telefono e tablet usa i comandi a schermo, meglio in orizzontale. Se scatta, scegli Grafica Bassa.</p>
   <div class="grp"><h3>Colore</h3><p class="note">Solo estetico.</p><div class="opts" id="optColor"></div></div>
   <div class="grp"><h3>Ruote</h3><p class="note" id="nWheels"></p><div class="opts" id="optWheels"></div></div>
   <div class="grp"><h3>Motore</h3><p class="note" id="nEngine"></p><div class="opts" id="optEngine"></div></div>
@@ -1159,12 +1213,12 @@ function fly(dt) {
       const tf = Math.sqrt(2 * P.pos.y / 9.8);
       extinguish(P.pos.x + fx * P.speed * 0.6 * tf, P.pos.z + fz * P.speed * 0.6 * tf, 13 + Math.min(5, P.pos.y * 0.08), 120);
     }
-    if (P.water <= 0) toast('Serbatoio vuoto: si ricarica in volo in 10 secondi (o subito sul lago)', 2.2);
+    if (P.water <= 0) toast('Serbatoio vuoto: si ricarica in volo in 20 secondi (o subito sul lago)', 2.2);
   }
-  // ricarica in volo: da vuoto a pieno in 10 secondi, solo quando non stai sganciando
+  // ricarica in volo: da vuoto a pieno in 20 secondi, solo quando non stai sganciando
   P.refilling = !P.dropping && !onGround && P.water < 1;
   if (P.refilling) {
-    P.water = Math.min(1, P.water + dt / 10);
+    P.water = Math.min(1, P.water + dt / 20);
     if (P.water >= 1) toast('Serbatoio di nuovo pieno', 1.4, false, 'good');
   }
   P.wasDropping = P.dropping;
@@ -1173,6 +1227,48 @@ function fly(dt) {
   P.props.forEach(p => p.rotation.z += dt * (6 + P.speed * 0.8));
   const onRunway = Math.abs(P.pos.x - RUNWAY.x) < RUNWAY.len / 2 && Math.abs(P.pos.z - RUNWAY.z) < RUNWAY.w / 2;
   locName = overLake ? 'Lago' : onGround ? (onRunway ? 'Pista' : 'A terra') : 'In volo';
+}
+
+/* ---------- Contadino (a piedi) ---------- */
+const F_START = { x: T_START.x + 5, z: T_START.z + 4, h: PI };
+const farmer = { kind: 'farmer', name: 'A piedi', group: new THREE.Group(), pos: new THREE.Vector3(F_START.x, 0, F_START.z), h: F_START.h, speed: 0, steer: 0, vel: null,
+  hp: 100, maxHp: 100, r: 0.7, lowered: false, lightsOn: false, hitCd: 0, walkT: 0, legs: [], arms: [] };
+(function buildFarmer() {
+  const g = farmer.group, jacket = mat(0xd9822b), jeans = mat(0x2f4a78), skin = mat(0xe0b48f), straw = mat(0xe2c36a);
+  const part = (geo, m, x, y, z, parent) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.castShadow = true; (parent || g).add(o); return o; };
+  [-0.17, 0.17].forEach(x => { const pv = new THREE.Group(); pv.position.set(x, 0.9, 0); g.add(pv); part(new THREE.BoxGeometry(0.25, 0.9, 0.28), jeans, 0, -0.45, 0, pv); farmer.legs.push(pv); });
+  part(new THREE.BoxGeometry(0.62, 0.78, 0.36), jacket, 0, 1.3, 0);
+  [-0.4, 0.4].forEach(x => { const pv = new THREE.Group(); pv.position.set(x, 1.62, 0); g.add(pv); part(new THREE.BoxGeometry(0.16, 0.7, 0.18), jacket, 0, -0.33, 0, pv); farmer.arms.push(pv); });
+  part(new THREE.SphereGeometry(0.21, 10, 8), skin, 0, 1.88, 0);
+  part(new THREE.CylinderGeometry(0.42, 0.42, 0.03, 14), straw, 0, 2.02, 0);
+  part(new THREE.CylinderGeometry(0.22, 0.24, 0.16, 12), straw, 0, 2.1, 0);
+  g.visible = false; scene.add(g);
+})();
+function walk(dt) {
+  const V = farmer, up = keys.KeyW || keys.ArrowUp, down = keys.KeyS || keys.ArrowDown, left = keys.KeyA || keys.ArrowLeft, right = keys.KeyD || keys.ArrowRight;
+  const run = keys.ShiftLeft || keys.ShiftRight;
+  const tv = up ? (run ? 8.5 : 4.8) : down ? -2.5 : 0;
+  V.speed += (tv - V.speed) * Math.min(1, dt * 8);
+  V.h += ((left ? 1 : 0) - (right ? 1 : 0)) * 2.6 * dt;
+  V.pos.x += Math.sin(V.h) * V.speed * dt; V.pos.z += Math.cos(V.h) * V.speed * dt; V.pos.y = 0;
+  collide(V, dt);
+  V.group.position.copy(V.pos); V.group.rotation.y = V.h;
+  V.walkT += Math.abs(V.speed) * dt * 1.7;
+  const sw = Math.sin(V.walkT) * 0.8 * Math.min(1, Math.abs(V.speed) / 4);
+  V.legs[0].rotation.x = sw; V.legs[1].rotation.x = -sw; V.arms[0].rotation.x = -sw; V.arms[1].rotation.x = sw;
+  const inField = fieldAt(V.pos.x, V.pos.z);
+  locName = inField ? inField.f.name : Math.hypot(V.pos.x - FARM.x, V.pos.z - FARM.z) < 30 ? 'Fattoria' : (Math.abs(V.pos.x) < ROAD_W / 2 || Math.abs(V.pos.z) < ROAD_W / 2) ? 'Strada' : 'Campagna';
+}
+function dismount() {
+  const V = active;
+  if (V === farmer) return;
+  if (V === plane ? (plane.pos.y > 0.6 || plane.speed > 2) : Math.abs(V.speed) > 3) { toast('Fermati per scendere', 1.4); return; }
+  V.speed = 0; V.steer = 0; if (V.vel) V.vel.set(0, 0);
+  const side = V === plane ? 6 : V.r + 1.6, lx = Math.cos(V.h), lz = -Math.sin(V.h);
+  farmer.pos.set(V.pos.x + lx * side, 0, V.pos.z + lz * side); farmer.h = V.h; farmer.speed = 0; farmer.hitCd = 0;
+  farmer.group.position.copy(farmer.pos); farmer.group.rotation.y = farmer.h; farmer.group.visible = true;
+  active = farmer; lookYaw = 0; lookPitch = 0; cruise = null; firing = false;
+  toast('A piedi: raggiungi un mezzo e premi E (Maiusc per correre)', 2.4); sfx('click');
 }
 
 /* ---------- Traffico ---------- */
@@ -1750,21 +1846,23 @@ window.addEventListener('keydown', e => {
   initAudio();
   if (state === 'play') {
     if (e.code === 'KeyC') { camMode = camMode === 'chase' ? 'cab' : 'chase'; toast(camMode === 'cab' ? 'Visuale cabina' : 'Visuale esterna', 0.8); }
-    if (e.code === 'KeyR') { active.lowered = !active.lowered; sfx('clunk'); }
+    if (e.code === 'KeyR' && active !== farmer) { active.lowered = !active.lowered; sfx('clunk'); }
+    if (e.code === 'KeyF') { if (active === farmer) switchVehicle(); else dismount(); }
     if (e.code === 'Digit1') setImplement('plow');
     if (e.code === 'Digit2') setImplement('seeder');
     if (e.code === 'Digit3') setImplement('water');
     if (e.code === 'KeyQ') { if (active === tractor) startSwap(); else toast('Le armi sono sul trattore', 1.2); }
     if (e.code === 'KeyE') switchVehicle();
     if (e.code === 'KeyT') {
-      if (active === plane) toast('Il Canadair non ha la crociera', 1.2);
+      if (active === farmer) { /* niente crociera a piedi */ }
+      else if (active === plane) toast('Il Canadair non ha la crociera', 1.2);
       else if (cruise === null) { cruise = clamp(Math.max(active.speed, 2.5), 1, 20); toast('Crociera ' + Math.round(cruise * 3.6) + ' km/h: W/S regolano, Spazio annulla', 2); sfx('click'); }
       else { cruise = null; toast('Crociera disattivata', 0.9); sfx('click'); }
     }
     if (e.code === 'KeyM') { $('world').classList.toggle('big'); }
-    if (e.code === 'KeyL') { active.lightsOn = !active.lightsOn; applyLights(active); sfx('click'); toast(active.lightsOn ? 'Luci accese' : 'Luci spente', 0.9); }
+    if (e.code === 'KeyL' && active !== farmer) { active.lightsOn = !active.lightsOn; applyLights(active); sfx('click'); toast(active.lightsOn ? 'Luci accese' : 'Luci spente', 0.9); }
     if (e.code === 'KeyG') {
-      if (active !== tractor) toast('Il garage modifica il trattore: scendi prima (E)', 1.6);
+      if (active !== tractor) toast('Il garage modifica il trattore: sali prima sul trattore (E)', 1.6);
       else if (Math.hypot(tractor.pos.x - FARM.x, tractor.pos.z - FARM.z) < 26) openGarage();
       else toast('Il garage è in fattoria (casa sulla minimappa)', 1.6);
     }
@@ -1809,6 +1907,12 @@ function setImplement(t) {
   sfx('clunk'); toast({ plow: 'Aratro montato', seeder: 'Seminatrice montata', water: 'Botte d\'acqua montata' }[t], 0.9);
 }
 function switchVehicle() {
+  if (active === farmer) {
+    let best = null, bd = Infinity;
+    for (const V of [tractor, combine, plane]) { const d = Math.hypot(V.pos.x - farmer.pos.x, V.pos.z - farmer.pos.z); if (d < (V === plane ? 12 : 7) && d < bd) { bd = d; best = V; } }
+    if (!best) { toast('Nessun mezzo a portata di mano: avvicinati', 1.8); return; }
+    enterVehicle(best); return;
+  }
   if (active === plane) {
     if (plane.pos.y > 0.6 || plane.speed > 2) { toast('Atterra e fermati per scendere', 1.6); return; }
     let best = null, bd = 30;
@@ -1822,15 +1926,15 @@ function switchVehicle() {
     const d = Math.hypot(V.pos.x - active.pos.x, V.pos.z - active.pos.z);
     if (d < (V === plane ? 18 : 12) && d < bd) { bd = d; best = V; }
   }
-  if (!best) { toast('Nessun mezzo vicino. Mietitrebbia: cerchio rosso. Canadair: aereo giallo sulla pista', 2.4); return; }
+  if (!best) { toast('Nessun mezzo vicino. Premi F per scendere e andare a piedi', 2.4); return; }
   enterVehicle(best);
 }
 function enterVehicle(V) {
   active.speed = 0; active.steer = 0; if (active.vel) active.vel.set(0, 0);
-  active = V; lookYaw = 0; lookPitch = 0; cruise = null;
+  active = V; lookYaw = 0; lookPitch = 0; cruise = null; farmer.group.visible = false;
   if (V === tractor) toast('Sei sul trattore', 1.4);
   else if (V === combine) toast('Sei sulla mietitrebbia: abbassa la testata con R', 1.8);
-  else toast('Canadair: W motore, A/D vira, frecce su/giù quota, Spazio sgancia. Si ricarica in volo in 10 secondi', 4);
+  else toast('Canadair: W motore, A/D vira, frecce su/giù quota, Spazio sgancia. Si ricarica in volo in 20 secondi', 4);
   sfx('clunk');
 }
 
@@ -1916,10 +2020,13 @@ function collide(V, dt) {
 }
 function damagePlayer(n) {
   active.hp = Math.max(0, active.hp - n);
-  if (active.hp <= 0 && state === 'play') { state = 'dead'; deadT = 2.5; $('deadOv').classList.add('on'); firing = false; }
+  if (active.hp <= 0 && state === 'play') {
+    state = 'dead'; deadT = 2.5; firing = false;
+    const dv = $('deadOv'); dv.querySelector('h1').textContent = active === farmer ? 'Sei ko' : 'Mezzo distrutto'; dv.querySelector('p').textContent = active === farmer ? 'Ti portano a riprenderti in fattoria…' : 'Riparazione in corso in fattoria…'; dv.classList.add('on');
+  }
 }
 function respawnVehicle(V) {
-  const S = V === tractor ? T_START : V === combine ? C_START : P_START;
+  const S = V === tractor ? T_START : V === combine ? C_START : V === farmer ? F_START : P_START;
   V.pos.set(S.x, 0, S.z); V.h = S.h; V.speed = 0; V.steer = 0; V.hp = V.maxHp;
   if (V.vel) V.vel.set(0, 0);
   if (V === active) cruise = null;
@@ -2118,7 +2225,7 @@ function updateCamera(dt) {
   const V = active, isC = V === combine, isP = V === plane;
   lookYaw = wrapAng(lookYaw);
   if (!dragging) { const k = Math.exp(-dt * 2.2); lookYaw *= k; lookPitch *= k; }
-  if (camMode === 'cab') {
+  if (camMode === 'cab' && V !== farmer) {
     if (camera.fov !== 75) { camera.fov = 75; camera.near = 0.1; camera.updateProjectionMatrix(); }
     lookYaw = clamp(lookYaw, -2.7, 2.7);
     const lp = clamp(-0.05 - lookPitch, -0.5, 0.9);
@@ -2130,11 +2237,11 @@ function updateCamera(dt) {
   } else {
     if (camera.fov !== 65) { camera.fov = 65; camera.near = 0.4; camera.updateProjectionMatrix(); }
     const a = V.h + lookYaw, fx = Math.sin(a), fz = Math.cos(a);
-    const elev = clamp((isP ? 0.3 : isC ? 0.42 : 0.46) + lookPitch, 0.08, 1.16), D = isP ? 34 : isC ? 19 : 13.4;
+    const elev = clamp((V === farmer ? 0.3 : isP ? 0.3 : isC ? 0.42 : 0.46) + lookPitch, 0.08, 1.16), D = V === farmer ? 7 : isP ? 34 : isC ? 19 : 13.4;
     tmpV.set(V.pos.x - fx * D * Math.cos(elev), V.pos.y + D * Math.sin(elev), V.pos.z - fz * D * Math.cos(elev));
     camPos.lerp(tmpV, 1 - Math.exp(-dt * (dragging ? 14 : 5)));
     camera.position.copy(camPos);
-    camLook.set(V.pos.x + fx * (isP ? 12 : 5), V.pos.y + (isC || isP ? 3 : 2.2) + Math.max(0, -lookPitch) * 25, V.pos.z + fz * (isP ? 12 : 5));
+    camLook.set(V.pos.x + fx * (isP ? 12 : V === farmer ? 4 : 5), V.pos.y + (isC || isP ? 3 : V === farmer ? 1.5 : 2.2) + Math.max(0, -lookPitch) * 25, V.pos.z + fz * (isP ? 12 : V === farmer ? 4 : 5));
     camera.lookAt(camLook);
   }
 }
@@ -2281,12 +2388,13 @@ const fmtMoney = v => (v < 0 ? '−' : '') + Math.round(Math.abs(v)).toLocaleStr
 function updateHUD() {
   const V = active, T = tractor, isT = V === tractor, isP = V === plane, isC = V === combine;
   // cruscotto
-  const kmh = Math.round(Math.abs(V.speed) * 3.6), vmax = isP ? 200 : isC ? 35 : 60, fr = Math.min(1, kmh / vmax);
+  const kmh = Math.round(Math.abs(V.speed) * 3.6), vmax = isP ? 200 : isC ? 35 : V === farmer ? 12 : 60, fr = Math.min(1, kmh / vmax);
   setText('gSpd', String(kmh));
   const gv = $('gVal'); gv.setAttribute('stroke-dasharray', (fr * 235.6).toFixed(1) + ' 400'); gv.style.stroke = fr > 0.85 ? '#ffb347' : ''; gv.style.visibility = kmh > 0 ? '' : 'hidden';
   setText('cVeh', V.name);
   let implTxt, implOn, implIco = 'tool';
   if (isP) { implTxt = 'Quota ' + Math.round(plane.pos.y) + ' m'; implOn = plane.pos.y > 1; implIco = 'arrow'; }
+  else if (V === farmer) { implTxt = 'Senza attrezzi'; implOn = false; implIco = 'tool'; }
   else if (isT) { implTxt = { plow: 'Aratro', seeder: 'Seminatrice', water: 'Botte' }[T.implement] + (T.lowered ? ' abbassato' : ' alzato'); if (T.implement === 'seeder' || T.implement === 'water') implTxt = implTxt.replace('abbassato', 'abbassata').replace('alzato', 'alzata'); implOn = T.lowered; implIco = T.implement === 'water' ? 'drop' : T.implement === 'seeder' ? 'sprout' : 'tool'; }
   else { implTxt = 'Testata ' + (combine.lowered ? 'abbassata' : 'alzata'); implOn = combine.lowered; implIco = 'wheat'; }
   chip('chImpl', implTxt, implOn); setUse('chImpl', implIco);
@@ -2296,7 +2404,7 @@ function updateHUD() {
   const hpF = V.hp / V.maxHp; meter('mHp', hpF, hpF < 0.35 ? 'var(--alarm)' : 'var(--sprout)');
   const showW = (isT && T.implement === 'water') || isP;
   $('mWater').style.display = showW ? '' : 'none';
-  if (showW) meter('mWater', isP ? plane.water : T.water, undefined, isP && plane.refilling ? Math.ceil((1 - plane.water) * 10) + ' s' : null);
+  if (showW) meter('mWater', isP ? plane.water : T.water, undefined, isP && plane.refilling ? Math.ceil((1 - plane.water) * 20) + ' s' : null);
   // arma
   const wpEl = $('weapon'); wpEl.style.display = isT ? '' : 'none';
   if (isT) {
@@ -2313,6 +2421,7 @@ function updateHUD() {
     }
   }
   updatePrompt();
+  if (tcOn) tcUpdate();
   // mondo
   const dT = dayPhase(), hh = Math.floor(dT * 24), mi = Math.floor((dT * 24 - hh) * 6) * 10, dayN = Math.floor(0.3 + stats.time / DAY_LEN) + 1;
   setText('wSeason', SEASONS[curSeason].name); setText('wDay', 'giorno ' + dayN);
@@ -2420,7 +2529,7 @@ function closeGarage() {
   if (firstStart) { startMoneyV = money = diff().money; seasonLen = seasonLenFor(tractor.cfg.goal); announce('Primavera, giorno 1', 'Segui il riquadro in alto a sinistra'); if (!helpHidden) setHelp(true); }
   firstStart = false;
 }
-function setHud(on) { ['leftCol', 'world', 'cluster', 'weapon', 'reticle', 'prompt', 'banner', 'vignette'].forEach(id => $(id).style.visibility = on ? '' : 'hidden'); if (!on) setHelp(false); }
+function setHud(on) { ['leftCol', 'world', 'cluster', 'weapon', 'reticle', 'prompt', 'banner', 'vignette', 'tc'].forEach(id => $(id).style.visibility = on ? '' : 'hidden'); if (!on) setHelp(false); }
 $('btnGfxP').addEventListener('click', () => { tractor.cfg.gfx = tractor.cfg.gfx === 'low' ? 'high' : 'low'; applyQuality(); refreshGarage(); saveSettings(); });
 // ---- navigazione: dove andare adesso ----
 function navTarget() {
@@ -2431,6 +2540,7 @@ function navTarget() {
     for (const k of burning) { const d = Math.hypot(cellCX(k) - A.x, cellCZ(k) - A.z); if (d < bd) { bd = d; best = k; } }
     return { x: cellCX(best), z: cellCZ(best), label: 'Incendio' };
   }
+  if (active === farmer) { const dt_ = Math.hypot(tractor.pos.x - A.x, tractor.pos.z - A.z), dc_ = Math.hypot(combine.pos.x - A.x, combine.pos.z - A.z); return dc_ < dt_ ? { x: combine.pos.x, z: combine.pos.z, label: 'Mietitrebbia' } : { x: tractor.pos.x, z: tractor.pos.z, label: 'Trattore' }; }
   if (active === plane) return { x: RUNWAY.x, z: RUNWAY.z, label: 'Pista' };
   if (active === tractor && tractor.implement === 'water' && tractor.water < 0.05) return { x: TOWER.x, z: TOWER.z, label: 'Torre dell\'acqua' };
   const here = fieldAt(A.x, A.z);
@@ -2462,13 +2572,14 @@ function updatePrompt() {
   if (state === 'play') {
     for (const V of [tractor, combine, plane]) {
       if (V === active || active === plane) continue;
-      if (Math.hypot(V.pos.x - A.x, V.pos.z - A.z) < (V === plane ? 18 : 12)) { p = '<kbd>E</kbd>' + (V === tractor ? 'Sali sul trattore' : V === combine ? 'Sali sulla mietitrebbia' : 'Sali sul Canadair'); break; }
+      if (Math.hypot(V.pos.x - A.x, V.pos.z - A.z) < (active === farmer ? (V === plane ? 12 : 7) : V === plane ? 18 : 12)) { p = '<kbd>E</kbd>' + (V === tractor ? 'Sali sul trattore' : V === combine ? 'Sali sulla mietitrebbia' : 'Sali sul Canadair'); break; }
     }
     if (!p && active === plane && plane.pos.y < 0.7 && plane.speed < 2 && [tractor, combine].some(V => Math.hypot(V.pos.x - A.x, V.pos.z - A.z) < 30)) p = '<kbd>E</kbd>Scendi dal Canadair';
     if (!p && active === tractor && Math.hypot(A.x - FARM.x, A.z - FARM.z) < 26) p = '<kbd>G</kbd>Garage: modifica il trattore';
     if (!p && active === tractor && tractor.water < 1 && Math.hypot(A.x - TOWER.x, A.z - TOWER.z) < 11) p = 'Riempimento botte: ' + Math.round(tractor.water * 100) + '%';
     if (!p && active === tractor && tractor.implement === 'water' && tractor.water < 0.99 && Math.hypot(A.x - TOWER.x, A.z - TOWER.z) < 30) p = 'Fermati nel cerchio blu per riempire la botte';
-    if (!p && active !== plane && fieldAt(A.x, A.z) && !active.lowered && Math.abs(active.speed) > 1) p = '<kbd>R</kbd>' + (active === combine ? 'Abbassa la testata' : 'Abbassa l\'attrezzo');
+    if (!p && active !== plane && active !== farmer && fieldAt(A.x, A.z) && !active.lowered && Math.abs(active.speed) > 1) p = '<kbd>R</kbd>' + (active === combine ? 'Abbassa la testata' : 'Abbassa l\'attrezzo');
+    if (!p && active !== farmer && Math.abs(active.speed) < 0.5 && !(active === plane && plane.pos.y > 0.6)) p = '<kbd>F</kbd>Scendi dal mezzo';
   }
   if (p !== lastPrompt) { lastPrompt = p; const el = $('prompt'); el.innerHTML = p; el.style.display = p ? 'block' : 'none'; }
 }
@@ -2486,8 +2597,9 @@ function nextStep() {
     return { tone: 'fire', icon: 'fire', title: 'Incendio ' + placeName(cellCX(k), cellCZ(k)),
       action: active === plane ? 'Sorvola le fiamme e sgancia l\'acqua' : 'Spegnilo con la botte abbassata o col Canadair', keys: active === plane ? ['Spazio'] : ['3', 'R', 'E'] };
   }
+  if (active === farmer) return { tone: '', icon: 'tool', title: 'A piedi', action: 'Raggiungi un mezzo e sali', keys: ['E'] };
   if (active === plane) return plane.water < 0.05
-    ? { tone: '', icon: 'drop', title: 'Canadair', action: 'Serbatoio in ricarica: 10 secondi in volo, o subito sul lago', keys: [] }
+    ? { tone: '', icon: 'drop', title: 'Canadair', action: 'Serbatoio in ricarica: 20 secondi in volo, o subito sul lago', keys: [] }
     : { tone: '', icon: 'drop', title: 'Canadair', action: 'Nessun incendio: torna alla pista e scendi', keys: ['E'] };
   if (curSeason === 1) {
     const dry = fields.find(x => !x.done && x.moist < 0.3 && x.counts[ST.RIPE] + x.counts[ST.WET] + x.counts[ST.STUB] > TOT * 0.2);
@@ -2534,7 +2646,6 @@ function copyReport(ta, btn) {
 $('btnCopyP').addEventListener('click', () => copyReport($('pauseRep'), $('btnCopyP')));
 $('btnCopyW').addEventListener('click', () => copyReport($('winRep'), $('btnCopyW')));
 $('btnGo').addEventListener('click', () => { initAudio(); closeGarage(); });
-if (matchMedia('(pointer: coarse)').matches && !matchMedia('(pointer: fine)').matches) $('touchNote').style.display = 'block';
 function setPause(p) { state = p ? 'pause' : 'play'; if (p) $('pauseRep').value = report(false); $('pauseOv').classList.toggle('on', p); firing = false; }
 $('btnResume').addEventListener('click', () => setPause(false));
 function win() {
@@ -2562,9 +2673,70 @@ $('btnAgain').addEventListener('click', () => {
   stats.kills = stats.lost = stats.time = stats.wrecks = stats.arrests = 0; startMoneyV = money = diff().money; seasonLen = seasonLenFor(tractor.cfg.goal); wanted = 0; noCrimeT = 0; arrestT = 0; lastGoal = null;
   fields.forEach(f => { f.doneAt = null; });
   tractor.lowered = false; tractor.water = 1; combine.lowered = false; tractor.swap = null; buildWeapon();
-  respawnVehicle(tractor); respawnVehicle(combine); respawnVehicle(plane); active = tractor; resetWorld();
+  respawnVehicle(tractor); respawnVehicle(combine); respawnVehicle(plane); active = tractor; farmer.group.visible = false; resetWorld();
   $('winOv').classList.remove('on'); state = 'play';
 });
+
+/* ---------- Comandi touch ---------- */
+let tcOn = false, tcVeh = '';
+const kd = c => window.dispatchEvent(new KeyboardEvent('keydown', { code: c, key: c }));
+const ku = c => window.dispatchEvent(new KeyboardEvent('keyup', { code: c, key: c }));
+function tcUpdate() {
+  const v = active === plane ? 'plane' : active === combine ? 'combine' : active === farmer ? 'farmer' : 'tractor';
+  if (v === tcVeh) return;
+  tcVeh = v; $('tc').dataset.veh = v;
+  document.querySelectorAll('#tc [data-v]').forEach(b => b.classList.toggle('hid', !b.dataset.v.split(' ').includes(v)));
+  $('tcBtns').classList.toggle('hasfire', v === 'tractor');
+}
+function enableTouch(auto) {
+  if (tcOn) return;
+  tcOn = true; document.body.classList.add('touch'); setHelp(false); helpAuto = false; tcUpdate();
+  if (auto) { let saved = false; try { saved = !!localStorage.getItem(SAVE_KEY); } catch (e) { } if (!saved) { tractor.cfg.gfx = 'low'; applyQuality(); refreshGarage(); } }
+}
+document.querySelectorAll('#tc .tb[data-k]').forEach(b => {
+  const c = b.dataset.k;
+  b.addEventListener('pointerdown', e => { e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch (x) { } b.classList.add('down'); kd(c); });
+  const up = () => { if (!b.classList.contains('down')) return; b.classList.remove('down'); ku(c); };
+  b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
+});
+{
+  const f = $('tcFire');
+  f.addEventListener('pointerdown', e => { e.preventDefault(); try { f.setPointerCapture(e.pointerId); } catch (x) { } f.classList.add('down'); firing = true; initAudio(); });
+  const up = () => { f.classList.remove('down'); firing = false; };
+  f.addEventListener('pointerup', up); f.addEventListener('pointercancel', up);
+  const fs = $('tcFs');
+  fs.addEventListener('click', () => { const d = document.documentElement; try { if (document.fullscreenElement) document.exitFullscreen(); else if (d.requestFullscreen) d.requestFullscreen(); } catch (x) { } });
+  if (!document.documentElement.requestFullscreen) fs.style.display = 'none';
+}
+{
+  const joy = $('joy'), knob = $('joyKnob'), jk = { KeyW: 0, KeyA: 0, KeyS: 0, KeyD: 0 };
+  let joyId = null;
+  const joySet = (c, on) => { if (!!jk[c] === on) return; jk[c] = on ? 1 : 0; if (on) kd(c); else ku(c); };
+  function joyMove(e) {
+    const r = joy.getBoundingClientRect(), R = r.width / 2;
+    let dx = e.clientX - (r.left + R), dy = e.clientY - (r.top + R);
+    const m = Math.hypot(dx, dy), cl = Math.min(m, R);
+    if (m > 0) { dx *= cl / m; dy *= cl / m; }
+    knob.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    const t = R * 0.3;
+    joySet('KeyA', dx < -t); joySet('KeyD', dx > t); joySet('KeyW', dy < -t); joySet('KeyS', dy > t);
+    keys.ShiftLeft = active === farmer && cl > R * 0.92;
+  }
+  function joyEnd() { joyId = null; knob.style.transform = ''; for (const c in jk) joySet(c, false); keys.ShiftLeft = false; }
+  joy.addEventListener('pointerdown', e => { e.preventDefault(); joyId = e.pointerId; try { joy.setPointerCapture(e.pointerId); } catch (x) { } joyMove(e); });
+  joy.addEventListener('pointermove', e => { if (e.pointerId === joyId) joyMove(e); });
+  joy.addEventListener('pointerup', e => { if (e.pointerId === joyId) joyEnd(); });
+  joy.addEventListener('pointercancel', e => { if (e.pointerId === joyId) joyEnd(); });
+}
+function aimAt(e) {
+  lastMX = e.clientX; lastMY = e.clientY;
+  mouse.x = (e.clientX / VW) * 2 - 1; mouse.y = -(e.clientY / VH) * 2 + 1;
+  reticle.style.left = e.clientX + 'px'; reticle.style.top = e.clientY + 'px';
+}
+canvas.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') { enableTouch(); aimAt(e); } });
+canvas.addEventListener('pointermove', e => { if (e.pointerType === 'touch') aimAt(e); });
+window.addEventListener('pointerdown', e => { if (e.pointerType === 'touch') enableTouch(); }, true);
+if ((matchMedia('(pointer: coarse)').matches && !matchMedia('(pointer: fine)').matches) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) { $('touchNote').style.display = 'block'; enableTouch(true); }
 
 /* ---------- Loop ---------- */
 let last = performance.now();
@@ -2574,7 +2746,7 @@ function loop(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now;
   if (state === 'play') {
     stats.time += dt;
-    if (active === plane) fly(dt); else drive(active, dt);
+    if (active === plane) fly(dt); else if (active === farmer) walk(dt); else drive(active, dt);
     animateVehicle(tractor, dt); animateVehicle(combine, dt);
     updateTraffic(dt);
     updateEnv(dt);
@@ -2605,7 +2777,7 @@ function loop(now) {
     if (f.cropDirty) { f.crops.instanceMatrix.needsUpdate = true; if (f.crops.instanceColor) f.crops.instanceColor.needsUpdate = true; f.cropDirty = false; }
   }
   if (engGain) {
-    const on = state === 'play' && !muted;
+    const on = state === 'play' && !muted && active !== farmer;
     engGain.gain.value = on ? 0.05 + Math.abs(active.speed) * 0.004 : 0;
     engOsc.frequency.value = (active === plane ? 55 : active === combine ? 30 : 38) + Math.abs(active.speed) * (active === plane ? 2.5 : 4.5);
     let nd = Infinity; for (const p of police) if (!p.wrecked && !p.leaving) nd = Math.min(nd, p.pos.distanceTo(active.pos));

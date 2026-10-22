@@ -7,7 +7,9 @@ aggiornati). In locale: apri "index.html" con doppio clic; non serve installare
 nulla e funziona anche senza internet.
 
 REQUISITI
-- Computer con tastiera e mouse (su telefono e tablet non e' giocabile).
+- Computer con tastiera e mouse, oppure telefono/tablet in orizzontale con i
+  comandi a schermo: joystick a sinistra, pulsanti a destra (stessi tasti
+  della tastiera), mira trascinando il dito e tieni premuto Fuoco.
 - Browser con WebGL attivo. Su PC vecchi o senza scheda grafica puo' andare
   a scatti, soprattutto durante incendi grandi e con pioggia o neve.
 
@@ -67,7 +69,7 @@ CANADAIR
 - W/S motore, A/D vira, frecce su/giu' quota (serve velocita' per decollare).
 - Parte con il serbatoio pieno.
 - Spazio sgancia l'acqua: l'acqua cade un po' in avanti.
-- Dopo lo sgancio il serbatoio si ricarica da solo in volo in 10 secondi
+- Dopo lo sgancio il serbatoio si ricarica da solo in volo in 20 secondi
   (da vuoto a pieno). Volando basso e veloce sul lago si ricarica in ~3 s.
 - Per scendere: atterra, fermati vicino a un mezzo e premi E.
 
@@ -85,6 +87,9 @@ COMANDI
   1 / 2 / 3          aratro / seminatrice / botte d'acqua
   Q                  cambia arma
   E                  cambia mezzo (trattore, mietitrebbia, Canadair)
+  F                  scendi a piedi; poi E vicino a un mezzo per salire
+                     (Maiusc corre). A piedi hai una tua barra della vita:
+                     auto, fuoco e polizia ti fanno male.
   C                  visuale esterna / cabina
   L                  accendi / spegni le luci
   T                  crociera: mantiene la velocita' (W/S la regolano,
